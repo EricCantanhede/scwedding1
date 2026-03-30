@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="theme-color" content="#181412">
+<title>SC Weddings — Filmes & Fotos para Casamentos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════
+   TOKENS
+══════════════════════════════════════ */
+:root{
+  --cream:#faf8f4; --ivory:#fff9f2;
+  --gold:#b8966a;  --gold-l:#d4b896; --gold-d:#8a6e48;
+  --dark:#181412;  --char:#2b2220;   --muted:#7a6e68; --rose:#e8d9cc;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent;text-size-adjust:100%;-webkit-text-size-adjust:100%;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark);overflow-x:hidden;min-width:320px;}
+img{display:block;width:100%;height:100%;object-fit:cover;}
+button,input,textarea{font-family:inherit;border-radius:0;-webkit-appearance:none;appearance:none;}
+button{cursor:pointer;}
+a{text-decoration:none;color:inherit;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:var(--gold-l);}
+.hidden{display:none!important;}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease;}
+.reveal.vis{opacity:1;transform:translateY(0);}
+
+/* ── LOADING ── */
+#loadScreen{
+  position:fixed;inset:0;z-index:9999;background:var(--dark);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;
+  transition:opacity .6s;
+}
+#loadScreen.out{opacity:0;pointer-events:none;}
+.ld-logo{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;color:var(--cream);letter-spacing:2px;}
+.ld-logo span{color:var(--gold);}
+.ld-bar{width:160px;height:2px;background:rgba(255,255,255,.08);}
+.ld-prog{height:100%;background:var(--gold);width:0%;transition:width .35s ease;}
+.ld-txt{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.28);}
+
+/* ── NAV ── */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;height:64px;padding:0 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:background .4s,box-shadow .4s;
+}
+#nav.solid{background:rgba(250,248,244,.95);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 1px 0 rgba(184,150,106,.18);}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:400;letter-spacing:1px;color:var(--dark);display:flex;align-items:baseline;}
+.nav-logo .amp{color:var(--gold);font-style:italic;margin:0 1px;}
+.nav-logo .sub{font-size:9px;font-weight:300;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-left:8px;align-self:center;font-style:normal;}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.nav-admin{height:36px;padding:0 16px;border:1px solid var(--gold);background:transparent;color:var(--gold);font-size:10px;font-weight:300;letter-spacing:2px;text-transform:uppercase;transition:background .2s,color .2s;display:inline-flex;align-items:center;}
+.nav-admin:hover,.nav-admin:active{background:var(--gold);color:var(--cream);}
+.ham{width:40px;height:40px;background:none;border:none;display:flex;flex-direction:column;justify-content:center;align-items:flex-end;gap:5px;padding:8px;}
+.ham-l{display:block;height:1px;background:var(--dark);transition:transform .3s,opacity .3s,width .3s;}
+.ham-l:nth-child(1),.ham-l:nth-child(2){width:24px;} .ham-l:nth-child(3){width:16px;}
+.ham.open .ham-l:nth-child(1){transform:translateY(6px) rotate(45deg);width:24px;}
+.ham.open .ham-l:nth-child(2){opacity:0;}
+.ham.open .ham-l:nth-child(3){transform:translateY(-6px) rotate(-45deg);width:24px;}
+.mob-menu{position:fixed;inset:0;z-index:190;background:var(--dark);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;transform:translateX(100%);transition:transform .45s cubic-bezier(.77,0,.175,1);padding:80px 24px;}
+.mob-menu.open{transform:translateX(0);}
+.mob-menu a{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;font-style:italic;color:var(--cream);letter-spacing:1px;transition:color .2s;}
+.mob-menu a:hover,.mob-menu a:active{color:var(--gold-l);}
+.mob-div{width:40px;height:1px;background:rgba(184,150,106,.4);}
+.desk-links{display:none;list-style:none;gap:28px;}
+.desk-links a{font-size:10px;font-weight:300;letter-spacing:3px;text-transform:uppercase;color:var(--char);transition:color .25s;}
+.desk-links a:hover{color:var(--gold);}
+@media(min-width:768px){#nav{padding:0 48px;height:72px;}.desk-links{display:flex;}.ham{display:none;}}
+
+/* ── HERO ── */
+.hero{height:100svh;min-height:600px;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;}
+.hero-bg img{filter:brightness(.68) saturate(.88);}
+.hero-vig{position:absolute;inset:0;background:linear-gradient(180deg,rgba(24,20,18,.2) 0%,transparent 40%,rgba(24,20,18,.72) 100%);}
+.hero-ct{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding:0 24px 64px;}
+.hero-badge{display:inline-flex;align-items:center;gap:10px;margin-bottom:16px;opacity:0;animation:fadeUp .7s .3s both;}
+.hero-badge-line{width:32px;height:1px;background:var(--gold-l);}
+.hero-badge-text{font-size:10px;font-weight:300;letter-spacing:4px;text-transform:uppercase;color:var(--gold-l);}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(40px,10vw,96px);font-weight:300;line-height:1.02;color:#fff;opacity:0;animation:fadeUp .8s .5s both;}
+.hero-title em{font-style:italic;color:var(--gold-l);}
+.hero-sub{margin-top:16px;font-size:clamp(14px,2.5vw,16px);font-weight:200;line-height:1.8;color:rgba(255,255,255,.72);max-width:480px;opacity:0;animation:fadeUp .8s .7s both;}
+.hero-ctas{margin-top:32px;display:flex;flex-wrap:wrap;gap:12px;opacity:0;animation:fadeUp .8s .9s both;}
+.btn-gold{height:50px;padding:0 36px;background:var(--gold);color:var(--cream);font-size:11px;font-weight:300;letter-spacing:2px;text-transform:uppercase;border:none;display:inline-flex;align-items:center;transition:background .25s,transform .2s;}
+.btn-gold:hover{background:var(--gold-d);transform:translateY(-2px);}
+.btn-outline{height:50px;padding:0 32px;border:1px solid rgba(255,255,255,.4);background:transparent;color:rgba(255,255,255,.88);font-size:11px;font-weight:300;letter-spacing:2px;text-transform:uppercase;display:inline-flex;align-items:center;transition:border-color .25s,color .25s;}
+.btn-outline:hover{border-color:#fff;color:#fff;}
+.hero-scr{position:absolute;bottom:28px;right:22px;z-index:3;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeIn 1s 1.2s both;}
+.hero-scr span{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,.35);writing-mode:vertical-rl;}
+.scr-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:bounce 2s ease-in-out infinite;}
+@media(min-width:768px){.hero-ct{padding:0 80px 80px;}.hero-scr{bottom:44px;right:44px;}}
+
+/* ── ORNAMENT ── */
+.orn{display:flex;align-items:center;gap:16px;padding:0 24px;margin:56px 0 0;}
+.orn-line{flex:1;height:1px;background:var(--rose);}
+.orn-icon{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold);font-style:italic;line-height:1;}
+@media(min-width:768px){.orn{padding:0 48px;}}
+
+/* ── SECTION HEAD ── */
+.sec-head{text-align:center;padding:56px 24px 44px;}
+.sec-eye{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,6vw,54px);font-weight:300;line-height:1.1;color:var(--dark);}
+.sec-title em{font-style:italic;color:var(--gold);}
+.sec-desc{margin-top:14px;font-size:14px;font-weight:200;line-height:1.85;color:var(--muted);max-width:520px;margin-left:auto;margin-right:auto;}
+@media(min-width:768px){.sec-head{padding:72px 48px 56px;}}
+
+/* ── CHAPTERS ── */
+.chapters{padding-bottom:72px;}
+.chapter{display:grid;grid-template-columns:1fr;margin-bottom:6px;overflow:hidden;}
+.ch-img{aspect-ratio:4/5;position:relative;overflow:hidden;}
+.ch-img img{transition:transform .9s cubic-bezier(.25,.46,.45,.94),filter .8s;filter:brightness(.88) saturate(.85);}
+.chapter:hover .ch-img img{transform:scale(1.06);filter:brightness(.95) saturate(1);}
+.ch-num{position:absolute;top:16px;left:16px;font-size:10px;font-weight:300;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,.75);background:rgba(24,20,18,.3);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);padding:6px 12px;}
+.ch-text{padding:28px 24px 32px;background:var(--ivory);display:flex;flex-direction:column;gap:8px;}
+.ch-tag{display:inline-flex;align-items:center;gap:8px;}
+.ch-tag-line{width:24px;height:1px;background:var(--gold);flex-shrink:0;}
+.ch-tag-lbl{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);}
+.ch-title{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,4vw,36px);font-weight:300;line-height:1.12;color:var(--dark);margin-top:4px;}
+.ch-title em{font-style:italic;color:var(--gold);}
+.ch-desc{font-size:14px;font-weight:200;line-height:1.9;color:var(--muted);}
+@media(min-width:700px){
+  .chapter{grid-template-columns:1fr 1fr;min-height:420px;}
+  .ch-img{aspect-ratio:unset;}
+  .ch-text{padding:48px 52px;justify-content:center;}
+  .chapter.rev .ch-img{order:2;}.chapter.rev .ch-text{order:1;}
+}
+@media(min-width:1024px){.chapter{min-height:500px;}.ch-text{padding:60px 72px;}}
+
+/* ── FULL QUOTE ── */
+.fquote{position:relative;overflow:hidden;padding:80px 24px;text-align:center;}
+.fq-bg{position:absolute;inset:0;}
+.fq-bg img{filter:brightness(.38) saturate(.65);}
+.fq-in{position:relative;z-index:1;}
+.fq-mk{font-family:'Cormorant Garamond',serif;font-size:72px;line-height:.6;color:var(--gold-l);opacity:.45;margin-bottom:12px;}
+.fq-tx{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,4vw,38px);font-weight:300;font-style:italic;color:#fff;line-height:1.45;max-width:680px;margin:0 auto;}
+.fq-au{margin-top:24px;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold-l);}
+@media(min-width:768px){.fquote{padding:112px 48px;}}
+
+/* ── VIDEO SECTION ── */
+#videoSec{background:var(--dark);padding-bottom:72px;}
+#videoSec .sec-title{color:#fff;}
+#videoSec .sec-eye{color:var(--gold-l);}
+#videoSec .sec-desc{color:rgba(255,255,255,.4);}
+#videoSec .orn-line{background:rgba(184,150,106,.2);}
+#videoSec .orn-icon{color:var(--gold-l);}
+.vid-grid{display:grid;grid-template-columns:1fr;gap:16px;padding:0 20px;}
+.vid-card{background:#111;border:1px solid rgba(184,150,106,.12);overflow:hidden;}
+.vid-thumb{position:relative;width:100%;padding-bottom:56.25%;overflow:hidden;cursor:pointer;}
+.vid-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s ease,filter .6s;filter:brightness(.78) saturate(.78);}
+.vid-card:hover .vid-thumb img{transform:scale(1.04);filter:brightness(.9) saturate(.9);}
+.play-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:50%;background:rgba(184,150,106,.88);display:flex;align-items:center;justify-content:center;pointer-events:none;transition:transform .25s,background .25s;}
+.vid-card:hover .play-btn{transform:translate(-50%,-50%) scale(1.12);background:var(--gold);}
+.play-arr{width:0;height:0;border-top:11px solid transparent;border-bottom:11px solid transparent;border-left:19px solid #fff;margin-left:4px;}
+.vid-info{padding:16px 20px 20px;}
+.vid-ttl{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:#fff;margin-bottom:6px;}
+.vid-dsc{font-size:13px;font-weight:200;color:rgba(255,255,255,.42);line-height:1.7;}
+.vid-tag{display:inline-flex;align-items:center;gap:6px;margin-top:10px;}
+.vid-tag span{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);}
+@media(min-width:600px){.vid-grid{grid-template-columns:repeat(2,1fr);}}
+@media(min-width:900px){.vid-grid{grid-template-columns:repeat(3,1fr);padding:0 48px;}}
+/* lightbox */
+.vlb{position:fixed;inset:0;z-index:600;background:rgba(24,20,18,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;padding:20px;}
+.vlb.on{opacity:1;pointer-events:all;}
+.vlb-in{width:100%;max-width:900px;position:relative;}
+.vlb-ratio{position:relative;width:100%;padding-bottom:56.25%;}
+.vlb-ratio iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
+.vlb-close{position:absolute;top:-40px;right:0;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.5);background:none;border:none;height:32px;transition:color .2s;}
+.vlb-close:hover{color:#fff;}
+
+/* ── MINI GRID ── */
+.mini-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;}
+.mini-item{aspect-ratio:1;overflow:hidden;position:relative;}
+.mini-item img{transition:transform .7s ease,filter .7s;filter:brightness(.9) saturate(.85);}
+.mini-item:hover img{transform:scale(1.08);filter:brightness(1) saturate(1);}
+.mini-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(24,20,18,.65) 0%,transparent 55%);opacity:0;transition:opacity .3s;display:flex;align-items:flex-end;padding:14px;}
+.mini-item:hover .mini-ov{opacity:1;}
+.mini-lbl{font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;color:#fff;}
+@media(min-width:600px){.mini-grid{grid-template-columns:repeat(3,1fr);}}
+@media(min-width:900px){.mini-grid{grid-template-columns:repeat(4,1fr);}}
+
+/* ── STATS ── */
+.stats{background:var(--dark);padding:56px 24px;display:grid;grid-template-columns:repeat(2,1fr);gap:40px;}
+.stat{text-align:center;}
+.stat-n{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;color:var(--gold-l);line-height:1;}
+.stat-n sup{font-size:18px;vertical-align:super;}
+.stat-l{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.32);margin-top:8px;}
+@media(min-width:600px){.stats{grid-template-columns:repeat(4,1fr);padding:72px 48px;}}
+
+/* ── ABOUT ── */
+.about{display:grid;grid-template-columns:1fr;}
+.about-img{aspect-ratio:4/5;overflow:hidden;}
+.about-img img{filter:brightness(.9) saturate(.85);transition:transform .9s ease;}
+.about:hover .about-img img{transform:scale(1.04);}
+.about-tx{padding:48px 24px 56px;background:var(--ivory);display:flex;flex-direction:column;justify-content:center;}
+.about-tx .sec-eye,.about-tx .sec-title{text-align:left;}
+.about-tx .sec-title{margin-bottom:18px;}
+.about-body{font-size:14px;font-weight:200;line-height:1.95;color:var(--muted);margin-bottom:24px;}
+.about-sig{font-family:'Cormorant Garamond',serif;font-size:30px;font-style:italic;color:var(--gold);}
+@media(min-width:768px){.about{grid-template-columns:1fr 1fr;}.about-img{aspect-ratio:unset;min-height:560px;}.about-tx{padding:64px 72px;}}
+
+/* ── TESTIMONIALS ── */
+.testis{padding:64px 24px 72px;background:var(--cream);}
+.testi-scroll{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:4px;}
+.testi-scroll::-webkit-scrollbar{display:none;}
+.testi-card{flex:0 0 min(85vw,360px);border:1px solid rgba(184,150,106,.2);background:var(--ivory);padding:32px 28px;scroll-snap-align:start;transition:box-shadow .3s;}
+.testi-card:hover{box-shadow:0 16px 48px rgba(184,150,106,.12);}
+.tq{font-family:'Cormorant Garamond',serif;font-size:52px;line-height:.8;color:var(--gold-l);opacity:.3;margin-bottom:4px;}
+.tstars{color:var(--gold);font-size:13px;letter-spacing:2px;margin-bottom:10px;}
+.ttext{font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;line-height:1.7;color:var(--char);margin-bottom:22px;}
+.tname{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);}
+.tdate{font-size:11px;color:var(--muted);margin-top:4px;}
+.tdots{display:flex;justify-content:center;gap:8px;margin-top:22px;}
+.tdot{width:6px;height:6px;border-radius:50%;background:var(--rose);border:none;cursor:pointer;transition:background .3s,transform .3s;}
+.tdot.act{background:var(--gold);transform:scale(1.3);}
+
+/* ── CTA ── */
+.cta-wrap{position:relative;overflow:hidden;padding:80px 24px;text-align:center;}
+.cta-bg{position:absolute;inset:0;}
+.cta-bg img{filter:brightness(.3) saturate(.55);}
+.cta-in{position:relative;z-index:1;}
+.cta-eye{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold-l);margin-bottom:14px;}
+.cta-title{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,7vw,60px);font-weight:300;color:#fff;line-height:1.1;margin-bottom:36px;}
+.cta-title em{font-style:italic;color:var(--gold-l);}
+.cta-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;}
+.btn-wa{height:52px;padding:0 32px;background:#25d366;color:#fff;font-size:11px;font-weight:400;letter-spacing:2px;text-transform:uppercase;border:none;display:inline-flex;align-items:center;gap:10px;transition:background .25s,transform .2s;}
+.btn-wa:hover{background:#1da851;transform:translateY(-2px);}
+.btn-ig{height:52px;padding:0 28px;border:1px solid rgba(255,255,255,.4);background:transparent;color:rgba(255,255,255,.88);font-size:11px;font-weight:300;letter-spacing:2px;text-transform:uppercase;display:inline-flex;align-items:center;gap:10px;transition:border-color .25s,color .25s;}
+.btn-ig:hover{border-color:#fff;color:#fff;}
+@media(min-width:768px){.cta-wrap{padding:112px 48px;}}
+
+/* ── FOOTER ── */
+footer{background:var(--dark);padding:48px 24px 36px;}
+.footer-in{display:flex;flex-direction:column;gap:28px;}
+.footer-logo{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;letter-spacing:1px;color:var(--cream);}
+.footer-logo .amp{color:var(--gold);font-style:italic;}
+.ftag{font-size:11px;color:rgba(255,255,255,.3);letter-spacing:2px;margin-top:4px;}
+.flinks{display:flex;flex-wrap:wrap;gap:18px;}
+.flinks a{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.32);transition:color .25s;}
+.flinks a:hover{color:var(--gold-l);}
+.fcopy{font-size:10px;color:rgba(255,255,255,.16);letter-spacing:1px;border-top:1px solid rgba(255,255,255,.06);padding-top:22px;margin-top:6px;}
+@media(min-width:768px){footer{padding:56px 48px 40px;}.footer-in{flex-direction:row;justify-content:space-between;align-items:flex-end;}}
+
+/* ── FLOAT WA ── */
+.float-wa{position:fixed;bottom:22px;right:20px;z-index:150;width:56px;height:56px;border-radius:50%;background:#25d366;border:none;box-shadow:0 6px 22px rgba(37,211,102,.42);display:flex;align-items:center;justify-content:center;font-size:26px;line-height:1;transition:transform .2s,box-shadow .2s;}
+.float-wa:hover,.float-wa:active{transform:scale(1.08);}
+
+/* ═══════════════════════════════════════
+   LOGIN MODAL
+═══════════════════════════════════════ */
+.overlay{position:fixed;inset:0;z-index:900;background:rgba(24,20,18,.88);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .35s;}
+.overlay.on{opacity:1;pointer-events:all;}
+.modal{background:var(--cream);width:100%;max-width:460px;padding:48px 28px 40px;transform:translateY(60px);transition:transform .4s cubic-bezier(.23,1,.32,1);position:relative;}
+.overlay.on .modal{transform:translateY(0);}
+.modal-x{position:absolute;top:16px;right:20px;width:32px;height:32px;background:none;border:none;font-size:16px;color:var(--muted);display:flex;align-items:center;justify-content:center;transition:color .2s;}
+.modal-x:hover{color:var(--dark);}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;margin-bottom:6px;}
+.modal-sub{font-size:13px;color:var(--muted);margin-bottom:32px;}
+.f-grp{margin-bottom:18px;}
+.f-lbl{display:block;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.f-inp{width:100%;height:46px;padding:0 14px;border:1px solid rgba(184,150,106,.28);background:var(--ivory);color:var(--dark);font-size:15px;font-weight:200;outline:none;transition:border-color .25s;}
+.f-inp:focus{border-color:var(--gold);}
+.f-err{font-size:12px;color:#c0614a;margin-top:6px;display:none;}
+.btn-dark{width:100%;height:48px;background:var(--dark);color:var(--cream);font-size:11px;font-weight:300;letter-spacing:3px;text-transform:uppercase;border:none;transition:background .25s;}
+.btn-dark:hover{background:var(--gold);}
+@media(min-width:600px){.overlay{align-items:center;}.modal{padding:56px 48px 48px;}}
+
+/* ═══════════════════════════════════════
+   ADMIN PANEL
+═══════════════════════════════════════ */
+#admin{position:fixed;inset:0;z-index:800;background:var(--ivory);overflow-y:auto;transform:translateX(100%);transition:transform .5s cubic-bezier(.77,0,.175,1);}
+#admin.on{transform:translateX(0);}
+.a-hd{background:var(--dark);height:56px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+.a-hd-logo{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--cream);letter-spacing:1px;}
+.a-hd-logo span{color:var(--gold);}
+.a-hd-close{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.4);background:none;border:none;transition:color .2s;height:40px;padding:0 4px;}
+.a-hd-close:hover{color:var(--gold-l);}
+@media(min-width:768px){.a-hd{padding:0 48px;}}
+
+/* Tabs */
+.a-tabs{display:flex;overflow-x:auto;scrollbar-width:none;background:var(--cream);border-bottom:1px solid var(--rose);position:sticky;top:56px;z-index:9;}
+.a-tabs::-webkit-scrollbar{display:none;}
+.a-tab{flex:0 0 auto;padding:0 18px;height:44px;font-size:11px;font-weight:300;letter-spacing:2px;text-transform:uppercase;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;white-space:nowrap;}
+.a-tab.act{color:var(--gold);border-bottom-color:var(--gold);}
+.a-pnl{display:none;padding:32px 20px 80px;}
+.a-pnl.act{display:block;}
+@media(min-width:768px){.a-pnl{padding:40px 48px 80px;}.a-tab{padding:0 24px;}}
+
+.a-ttl{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;margin-bottom:4px;color:var(--dark);}
+.a-sub{font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.65;}
+.a-div{border:none;border-top:1px solid var(--rose);margin:40px 0;}
+
+/* Info box */
+.info-box{background:rgba(184,150,106,.08);border:1px solid rgba(184,150,106,.25);padding:16px 20px;margin-bottom:24px;border-radius:0;}
+.info-box p{font-size:13px;color:var(--char);line-height:1.7;}
+.info-box a{color:var(--gold);text-decoration:underline;}
+.info-box strong{font-weight:400;}
+.badge-ok{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.3);color:#1a8a3a;}
+.badge-warn{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;background:rgba(184,150,106,.1);border:1px solid rgba(184,150,106,.3);color:var(--gold-d);}
+
+/* Toggle */
+.tgl-row{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;background:var(--cream);border:1px solid var(--rose);margin-bottom:10px;}
+.tgl-lbl{display:flex;flex-direction:column;gap:3px;}
+.tgl-lbl-t{font-size:14px;font-weight:400;color:var(--dark);}
+.tgl-lbl-s{font-size:12px;color:var(--muted);}
+.sw{position:relative;width:50px;height:28px;flex-shrink:0;}
+.sw input{opacity:0;width:0;height:0;position:absolute;}
+.sw-tr{position:absolute;inset:0;border-radius:14px;background:var(--rose);transition:background .25s;cursor:pointer;}
+.sw input:checked+.sw-tr{background:var(--gold);}
+.sw-th{position:absolute;top:4px;left:4px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .25s;pointer-events:none;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+.sw input:checked~.sw-th{transform:translateX(22px);}
+
+/* Photo slots */
+.a-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:28px;}
+@media(min-width:600px){.a-grid{grid-template-columns:repeat(3,1fr);}}
+@media(min-width:900px){.a-grid{grid-template-columns:repeat(4,1fr);}}
+.a-slot{position:relative;aspect-ratio:4/5;overflow:hidden;border:2px dashed rgba(184,150,106,.3);background:var(--cream);transition:border-color .25s;cursor:pointer;}
+.a-slot:hover{border-color:var(--gold);}
+.a-slot>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.a-slot-ov{position:absolute;inset:0;background:rgba(24,20,18,.55);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;opacity:0;transition:opacity .25s;}
+.a-slot:hover .a-slot-ov{opacity:1;}
+.a-slot-lbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.75);text-align:center;}
+.a-slot-btn{font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:7px 14px;border:1px solid var(--gold-l);background:transparent;color:var(--gold-l);cursor:pointer;}
+.a-slot-btn:hover{background:var(--gold-l);color:var(--dark);}
+.a-slot input[type=file]{display:none;}
+.a-slot-spin{position:absolute;inset:0;background:rgba(24,20,18,.7);display:none;flex-direction:column;align-items:center;justify-content:center;gap:8px;}
+.a-slot-spin.on{display:flex;}
+.spin-ring{width:28px;height:28px;border:2px solid rgba(255,255,255,.2);border-top-color:var(--gold-l);border-radius:50%;animation:spin .8s linear infinite;}
+.a-slot-spin span{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#fff;}
+
+/* Form */
+.a-g2{display:grid;grid-template-columns:1fr;gap:14px;}
+@media(min-width:600px){.a-g2{grid-template-columns:1fr 1fr;}}
+.a-fg{margin-bottom:0;}
+.a-lbl{display:block;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.a-inp{width:100%;height:42px;padding:0 12px;border:1px solid rgba(184,150,106,.25);background:var(--cream);color:var(--dark);font-size:14px;font-weight:200;outline:none;transition:border-color .25s;}
+.a-inp:focus{border-color:var(--gold);}
+textarea.a-inp{height:auto;padding:10px 12px;resize:vertical;min-height:80px;}
+.a-save{height:46px;padding:0 40px;background:var(--dark);color:var(--cream);font-size:11px;font-weight:300;letter-spacing:3px;text-transform:uppercase;border:none;transition:background .25s;display:inline-flex;align-items:center;gap:8px;margin-top:24px;}
+.a-save:hover:not(:disabled){background:var(--gold);}
+.a-save:disabled{opacity:.55;cursor:not-allowed;}
+.a-ok{display:none;padding:12px 16px;margin-top:12px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.25);color:#1a8a3a;font-size:13px;}
+.a-err{display:none;padding:12px 16px;margin-top:12px;background:rgba(192,97,74,.08);border:1px solid rgba(192,97,74,.25);color:#c0614a;font-size:13px;}
+
+/* Accordion */
+.acc{border:1px solid var(--rose);margin-bottom:10px;background:var(--cream);}
+.acc-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;cursor:pointer;user-select:none;}
+.acc-nm{font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;color:var(--dark);}
+.acc-tg{font-size:12px;color:var(--gold);background:none;border:none;transition:transform .3s;line-height:1;cursor:pointer;}
+.acc-tg.open{transform:rotate(180deg);}
+.acc-bd{display:none;padding:4px 18px 18px;}
+.acc-bd.open{display:block;}
+
+/* vid preview in admin */
+.vid-prev{width:100%;aspect-ratio:16/9;object-fit:cover;margin-bottom:12px;background:var(--dark);}
+.vid-hint{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.6;}
+
+/* share link */
+.share-box{background:var(--dark);padding:16px 20px;margin-top:20px;}
+.share-ttl{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold-l);margin-bottom:8px;}
+.share-url{font-size:12px;color:#fff;word-break:break-all;background:rgba(255,255,255,.05);padding:10px 12px;border:1px solid rgba(255,255,255,.1);margin-bottom:12px;line-height:1.6;}
+.copy-btn{height:34px;padding:0 18px;background:var(--gold);color:var(--cream);font-size:10px;letter-spacing:2px;text-transform:uppercase;border:none;transition:background .2s;cursor:pointer;}
+.copy-btn:hover{background:var(--gold-d);}
+
+/* keyframes */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+@keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loadScreen">
+  <div class="ld-logo">SC<span>&nbsp;</span>Weddings</div>
+  <div class="ld-bar"><div class="ld-prog" id="ldProg"></div></div>
+  <div class="ld-txt" id="ldTxt">Carregando...</div>
+</div>
+
+<!-- FLOAT WA -->
+<button class="float-wa" id="floatWa">💬</button>
+
+<!-- MOBILE MENU -->
+<div class="mob-menu" id="mobMenu">
+  <a href="#galeria" onclick="closeMob()">Galeria</a>
+  <div class="mob-div"></div>
+  <a href="#filmes" id="mobVidLink" onclick="closeMob()">Filmes</a>
+  <div class="mob-div"></div>
+  <a href="#sobre" onclick="closeMob()">Sobre</a>
+  <div class="mob-div"></div>
+  <a href="#depoimentos" onclick="closeMob()">Depoimentos</a>
+  <div class="mob-div"></div>
+  <a href="#contato" onclick="closeMob()">Contato</a>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">SC<span class="amp">&nbsp;</span>Weddings<span class="sub">Production</span></a>
+  <div class="nav-right">
+    <ul class="desk-links">
+      <li><a href="#galeria">Galeria</a></li>
+      <li><a href="#filmes" id="deskVidLink">Filmes</a></li>
+      <li><a href="#sobre">Sobre</a></li>
+      <li><a href="#depoimentos">Depoimentos</a></li>
+      <li><a href="#contato">Contato</a></li>
+    </ul>
+    <button class="nav-admin" id="openLoginBtn">Admin</button>
+    <button class="ham" id="ham"><span class="ham-l"></span><span class="ham-l"></span><span class="ham-l"></span></button>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-bg"><img id="heroImg" src="" alt="SC Weddings"></div>
+  <div class="hero-vig"></div>
+  <div class="hero-ct">
+    <div class="hero-badge"><div class="hero-badge-line"></div><span class="hero-badge-text" id="heroBadge"></span></div>
+    <h1 class="hero-title" id="heroTitle"></h1>
+    <p class="hero-sub" id="heroSub"></p>
+    <div class="hero-ctas">
+      <button class="btn-gold" onclick="scrollS('galeria')">Ver Portfólio</button>
+      <button class="btn-outline" onclick="scrollS('contato')">Agendar Sessão</button>
+    </div>
+  </div>
+  <div class="hero-scr"><div class="scr-dot"></div><span>scroll</span></div>
+</section>
+
+<div class="orn"><div class="orn-line"></div><div class="orn-icon">♡</div><div class="orn-line"></div></div>
+
+<!-- GALLERY HEADER -->
+<div class="sec-head reveal" id="galeria">
+  <p class="sec-eye" id="gallEye"></p>
+  <h2 class="sec-title" id="gallTitle"></h2>
+  <p class="sec-desc" id="gallDesc"></p>
+</div>
+
+<!-- CHAPTERS -->
+<section class="chapters">
+  <div class="chapter reveal"><div class="ch-img"><img id="chImg0" src="" alt=""><div class="ch-num" id="chNum0"></div></div><div class="ch-text"><div class="ch-tag"><div class="ch-tag-line"></div><span class="ch-tag-lbl" id="chTag0"></span></div><h3 class="ch-title" id="chTitle0"></h3><p class="ch-desc" id="chDesc0"></p></div></div>
+  <div class="chapter rev reveal"><div class="ch-img"><img id="chImg1" src="" alt=""><div class="ch-num" id="chNum1"></div></div><div class="ch-text"><div class="ch-tag"><div class="ch-tag-line"></div><span class="ch-tag-lbl" id="chTag1"></span></div><h3 class="ch-title" id="chTitle1"></h3><p class="ch-desc" id="chDesc1"></p></div></div>
+  <div class="chapter reveal"><div class="ch-img"><img id="chImg2" src="" alt=""><div class="ch-num" id="chNum2"></div></div><div class="ch-text"><div class="ch-tag"><div class="ch-tag-line"></div><span class="ch-tag-lbl" id="chTag2"></span></div><h3 class="ch-title" id="chTitle2"></h3><p class="ch-desc" id="chDesc2"></p></div></div>
+  <div class="chapter rev reveal"><div class="ch-img"><img id="chImg3" src="" alt=""><div class="ch-num" id="chNum3"></div></div><div class="ch-text"><div class="ch-tag"><div class="ch-tag-line"></div><span class="ch-tag-lbl" id="chTag3"></span></div><h3 class="ch-title" id="chTitle3"></h3><p class="ch-desc" id="chDesc3"></p></div></div>
+  <div class="chapter reveal"><div class="ch-img"><img id="chImg4" src="" alt=""><div class="ch-num" id="chNum4"></div></div><div class="ch-text"><div class="ch-tag"><div class="ch-tag-line"></div><span class="ch-tag-lbl" id="chTag4"></span></div><h3 class="ch-title" id="chTitle4"></h3><p class="ch-desc" id="chDesc4"></p></div></div>
+  <div class="chapter rev reveal"><div class="ch-img"><img id="chImg5" src="" alt=""><div class="ch-num" id="chNum5"></div></div><div class="ch-text"><div class="ch-tag"><div class="ch-tag-line"></div><span class="ch-tag-lbl" id="chTag5"></span></div><h3 class="ch-title" id="chTitle5"></h3><p class="ch-desc" id="chDesc5"></p></div></div>
+</section>
+
+<!-- QUOTE -->
+<div class="fquote reveal">
+  <div class="fq-bg"><img id="quoteImg" src="" alt=""></div>
+  <div class="fq-in"><div class="fq-mk">"</div><p class="fq-tx" id="quoteText"></p><p class="fq-au" id="quoteAuthor"></p></div>
+</div>
+
+<!-- VIDEOS -->
+<section id="videoSec" class="hidden">
+  <div class="orn" style="padding-top:64px;margin-top:0;"><div class="orn-line" style="background:rgba(184,150,106,.2)"></div><div class="orn-icon" style="color:var(--gold-l)">▶</div><div class="orn-line" style="background:rgba(184,150,106,.2)"></div></div>
+  <div class="sec-head reveal" id="filmes">
+    <p class="sec-eye" id="vidEye"></p>
+    <h2 class="sec-title" id="vidTitle"></h2>
+    <p class="sec-desc" id="vidDesc"></p>
+  </div>
+  <div class="vid-grid" id="vidGrid"></div>
+  <div style="height:72px"></div>
+</section>
+
+<!-- VIDEO LIGHTBOX -->
+<div class="vlb" id="vlb">
+  <div class="vlb-in">
+    <button class="vlb-close" id="vlbClose">✕ fechar</button>
+    <div class="vlb-ratio"><iframe id="vlbFrame" src="" allowfullscreen allow="autoplay;encrypted-media"></iframe></div>
+  </div>
+</div>
+
+<!-- MINI GRID -->
+<section id="miniSec">
+  <div class="orn" style="margin-top:64px;"><div class="orn-line"></div><div class="orn-icon">✦</div><div class="orn-line"></div></div>
+  <div class="sec-head reveal"><p class="sec-eye">Momentos Especiais</p><h2 class="sec-title">Mais <em>memórias</em></h2></div>
+  <div class="mini-grid reveal">
+    <div class="mini-item"><img id="mini1" src="" alt=""><div class="mini-ov"><span class="mini-lbl" id="miniL1"></span></div></div>
+    <div class="mini-item"><img id="mini2" src="" alt=""><div class="mini-ov"><span class="mini-lbl" id="miniL2"></span></div></div>
+    <div class="mini-item"><img id="mini3" src="" alt=""><div class="mini-ov"><span class="mini-lbl" id="miniL3"></span></div></div>
+    <div class="mini-item"><img id="mini4" src="" alt=""><div class="mini-ov"><span class="mini-lbl" id="miniL4"></span></div></div>
+    <div class="mini-item"><img id="mini5" src="" alt=""><div class="mini-ov"><span class="mini-lbl" id="miniL5"></span></div></div>
+    <div class="mini-item"><img id="mini6" src="" alt=""><div class="mini-ov"><span class="mini-lbl" id="miniL6"></span></div></div>
+    <div class="mini-item"><img id="mini7" src="" alt=""><div class="mini-ov"><span class="mini-lbl" id="miniL7"></span></div></div>
+    <div class="mini-item"><img id="mini8" src="" alt=""><div class="mini-ov"><span class="mini-lbl" id="miniL8"></span></div></div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats reveal">
+  <div class="stat"><div class="stat-n" id="sN1">0</div><div class="stat-l" id="sL1"></div></div>
+  <div class="stat"><div class="stat-n" id="sN2">0</div><div class="stat-l" id="sL2"></div></div>
+  <div class="stat"><div class="stat-n" id="sN3">0<sup>k</sup></div><div class="stat-l" id="sL3"></div></div>
+  <div class="stat"><div class="stat-n" id="sN4">0</div><div class="stat-l" id="sL4"></div></div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="sobre">
+  <div class="about-img reveal"><img id="aboutImg" src="" alt="SC Weddings"></div>
+  <div class="about-tx reveal" style="transition-delay:120ms">
+    <p class="sec-eye" id="aboutEye"></p>
+    <h2 class="sec-title" id="aboutTitle"></h2>
+    <p class="about-body" id="aboutBody"></p>
+    <div class="about-sig" id="aboutSig"></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testis reveal" id="depoimentos">
+  <div class="sec-head" style="padding-top:0">
+    <p class="sec-eye" id="testiEye"></p>
+    <h2 class="sec-title" id="testiTitle"></h2>
+  </div>
+  <div class="testi-scroll" id="testiScroll">
+    <div class="testi-card"><div class="tq">"</div><div class="tstars" id="ts0">★★★★★</div><p class="ttext" id="tt0"></p><div class="tname" id="tn0"></div><div class="tdate" id="td0"></div></div>
+    <div class="testi-card"><div class="tq">"</div><div class="tstars" id="ts1">★★★★★</div><p class="ttext" id="tt1"></p><div class="tname" id="tn1"></div><div class="tdate" id="td1"></div></div>
+    <div class="testi-card"><div class="tq">"</div><div class="tstars" id="ts2">★★★★★</div><p class="ttext" id="tt2"></p><div class="tname" id="tn2"></div><div class="tdate" id="td2"></div></div>
+    <div class="testi-card"><div class="tq">"</div><div class="tstars" id="ts3">★★★★★</div><p class="ttext" id="tt3"></p><div class="tname" id="tn3"></div><div class="tdate" id="td3"></div></div>
+  </div>
+  <div class="tdots"><button class="tdot act" onclick="scrollTesti(0)"></button><button class="tdot" onclick="scrollTesti(1)"></button><button class="tdot" onclick="scrollTesti(2)"></button><button class="tdot" onclick="scrollTesti(3)"></button></div>
+</section>
+
+<!-- CTA -->
+<section class="cta-wrap reveal" id="contato">
+  <div class="cta-bg"><img id="ctaImg" src="" alt=""></div>
+  <div class="cta-in">
+    <p class="cta-eye" id="ctaEye"></p>
+    <h2 class="cta-title" id="ctaTitle"></h2>
+    <div class="cta-btns"><button class="btn-wa" id="waBtn">💬 WhatsApp</button><button class="btn-ig" id="igBtn">📸 Instagram</button></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-in">
+    <div><div class="footer-logo">SC<span class="amp">&nbsp;</span>Weddings</div><div class="ftag" id="footerTag"></div></div>
+    <div><div class="flinks"><a href="#" id="fInsta">Instagram</a><a href="#" id="fFace">Facebook</a><a href="#" id="fWa">WhatsApp</a></div><div class="fcopy" id="footerCopy"></div></div>
+  </div>
+</footer>
+
+<!-- LOGIN -->
+<div class="overlay" id="loginOverlay">
+  <div class="modal">
+    <button class="modal-x" id="closeLoginBtn">✕</button>
+    <h2 class="modal-title">Área Admin</h2>
+    <p class="modal-sub">Entre com suas credenciais para gerenciar o site.</p>
+    <div class="f-grp"><label class="f-lbl">Usuário</label><input class="f-inp" type="text" id="loginUser" placeholder="admin" autocomplete="username"></div>
+    <div class="f-grp"><label class="f-lbl">Senha</label><input class="f-inp" type="password" id="loginPass" placeholder="••••••" autocomplete="current-password"><p class="f-err" id="loginErr">Usuário ou senha incorretos.</p></div>
+    <button class="btn-dark" id="loginBtn">Entrar →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════ ADMIN ═══════════════════ -->
+<div id="admin">
+  <div class="a-hd">
+    <div class="a-hd-logo">SC<span>&nbsp;</span>Weddings · <em style="font-style:italic;font-weight:200;font-size:14px">Admin</em></div>
+    <button class="a-hd-close" id="closeAdminBtn">← Fechar</button>
+  </div>
+  <div class="a-tabs" id="aTabs">
+    <button class="a-tab act" data-tab="tp-cfg">⚙️ Configuração</button>
+    <button class="a-tab" data-tab="tp-sec">👁️ Seções</button>
+    <button class="a-tab" data-tab="tp-vid">🎬 Vídeos</button>
+    <button class="a-tab" data-tab="tp-pht">📸 Fotos</button>
+    <button class="a-tab" data-tab="tp-txt">✏️ Textos</button>
+    <button class="a-tab" data-tab="tp-tst">💬 Depoimentos</button>
+    <button class="a-tab" data-tab="tp-num">📊 Números</button>
+    <button class="a-tab" data-tab="tp-ctt">📞 Contatos</button>
+    <button class="a-tab" data-tab="tp-pwd">🔒 Senha</button>
+  </div>
+
+  <!-- CFG -->
+  <div class="a-pnl act" id="tp-cfg">
+    <h2 class="a-ttl">⚙️ Configuração</h2>
+    <p class="a-sub">Configure os serviços de nuvem para que <strong>todos os visitantes vejam as mesmas informações</strong>. É gratuito e só precisa ser feito uma vez.</p>
+
+    <div class="info-box">
+      <p><strong>📦 JSONbin.io</strong> — salva textos, configurações e links<br>
+      1. Acesse <a href="https://jsonbin.io" target="_blank">jsonbin.io</a> → crie conta gratuita<br>
+      2. Vá em perfil → <strong>API Keys</strong> → copie a <strong>Master Key</strong><br>
+      3. Cole abaixo e clique em <strong>Criar Armazenamento</strong></p>
+    </div>
+    <div class="a-g2">
+      <div class="a-fg"><label class="a-lbl">Master Key JSONbin.io</label><input class="a-inp" type="password" id="cfgMKey" placeholder="$2a$10$..."></div>
+      <div class="a-fg"><label class="a-lbl">Bin ID (gerado automaticamente)</label><input class="a-inp" id="cfgBinId" placeholder="Gerado ao clicar em Criar" readonly style="background:var(--rose);opacity:.7"></div>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:16px;">
+      <button class="a-save" id="btnCreateBin" style="margin-top:0">Criar Armazenamento</button>
+      <button class="a-save" id="btnTestBin" style="margin-top:0;background:var(--muted)">Testar Conexão</button>
+    </div>
+    <div class="a-ok" id="cfgBinOk"></div>
+    <div class="a-err" id="cfgBinErr"></div>
+
+    <div id="shareBox" style="display:none">
+      <div class="share-box" style="margin-top:20px">
+        <div class="share-ttl">🔗 Link do site — compartilhe este endereço</div>
+        <div class="share-url" id="shareUrl"></div>
+        <button class="copy-btn" id="copyLinkBtn">Copiar</button>
+        <p style="font-size:11px;color:rgba(255,255,255,.3);margin-top:10px;line-height:1.6">Todos que acessarem este link verão o mesmo conteúdo.</p>
+      </div>
+    </div>
+
+    <div class="a-div"></div>
+
+    <div class="info-box">
+      <p><strong>🖼️ ImgBB</strong> — hospeda suas fotos na nuvem<br>
+      1. Acesse <a href="https://imgbb.com" target="_blank">imgbb.com</a> → crie conta gratuita<br>
+      2. Acesse <a href="https://api.imgbb.com" target="_blank">api.imgbb.com</a> → clique em "Get API key"<br>
+      3. Cole abaixo e salve</p>
+    </div>
+    <div class="a-fg" style="max-width:400px">
+      <label class="a-lbl">API Key ImgBB</label>
+      <input class="a-inp" type="password" id="cfgImgbbKey" placeholder="abc123def456...">
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px;">
+      <button class="a-save" id="btnSaveImgbb" style="margin-top:0">Salvar Chave ImgBB</button>
+      <span id="imgbbStatus"></span>
+    </div>
+    <div class="a-ok" id="cfgImgbbOk">✓ Chave salva! Suas fotos serão enviadas para a nuvem.</div>
+  </div>
+
+  <!-- SEÇÕES -->
+  <div class="a-pnl" id="tp-sec">
+    <h2 class="a-ttl">👁️ Seções</h2>
+    <p class="a-sub">Ative ou oculte seções da página. A alteração é salva e fica visível para todos.</p>
+    <div class="tgl-row"><div class="tgl-lbl"><span class="tgl-lbl-t">🎬 Catálogo de Vídeos</span><span class="tgl-lbl-s">Exibe a seção "Nossos Filmes"</span></div><label class="sw"><input type="checkbox" id="togVideo"><div class="sw-tr"></div><div class="sw-th"></div></label></div>
+    <div class="tgl-row"><div class="tgl-lbl"><span class="tgl-lbl-t">🖼️ Mais Memórias</span><span class="tgl-lbl-s">Exibe o grid de 8 fotos extras</span></div><label class="sw"><input type="checkbox" id="togMini"><div class="sw-tr"></div><div class="sw-th"></div></label></div>
+    <button class="a-save" id="btnSaveSec">Salvar Visibilidade →</button>
+    <div class="a-ok" id="secOk">✓ Salvo e visível para todos!</div>
+    <div class="a-err" id="secErr"></div>
+  </div>
+
+  <!-- VÍDEOS -->
+  <div class="a-pnl" id="tp-vid">
+    <h2 class="a-ttl">🎬 Catálogo de Vídeos</h2>
+    <p class="a-sub">Cole o link do YouTube. Miniatura e player são gerados automaticamente. Deixe vazio para ocultar.</p>
+    <div id="vidEditList"></div>
+    <button class="a-save" id="btnSaveVid">Salvar Vídeos →</button>
+    <div class="a-ok" id="vidOk">✓ Vídeos salvos!</div>
+    <div class="a-err" id="vidErr"></div>
+  </div>
+
+  <!-- FOTOS -->
+  <div class="a-pnl" id="tp-pht">
+    <h2 class="a-ttl">📸 Foto Principal</h2>
+    <p class="a-sub">Foto do topo. Requer ImgBB configurado para aparecer para todos.</p>
+    <div class="a-grid" style="grid-template-columns:minmax(0,150px);max-width:150px;">
+      <div class="a-slot" onclick="$('fHero').click()"><img id="tHero" src="" alt=""><div class="a-slot-ov"><span class="a-slot-lbl">Hero</span><button class="a-slot-btn">Enviar</button></div><div class="a-slot-spin" id="spHero"><div class="spin-ring"></div><span>Enviando...</span></div><input type="file" id="fHero" accept="image/*" onchange="handleUpload(this,'heroImg','tHero','spHero')"></div>
+    </div>
+    <div class="a-div"></div>
+    <h2 class="a-ttl">Capítulos da Galeria</h2>
+    <p class="a-sub">Clique para fazer upload das suas fotos.</p>
+    <div class="a-grid">
+      <div class="a-slot" onclick="$('fCh0').click()"><img id="tCh0" src="" alt=""><div class="a-slot-ov"><span class="a-slot-lbl">Cap.01</span><button class="a-slot-btn">Enviar</button></div><div class="a-slot-spin" id="spCh0"><div class="spin-ring"></div><span>Enviando...</span></div><input type="file" id="fCh0" accept="image/*" onchange="handleUpload(this,'chImg0','tCh0','spCh0')"></div>
+      <div class="a-slot" onclick="$('fCh1').click()"><img id="tCh1" src="" alt=""><div class="a-slot-ov"><span class="a-slot-lbl">Cap.02</span><button class="a-slot-btn">Enviar</button></div><div class="a-slot-spin" id="spCh1"><div class="spin-ring"></div><span>Enviando...</span></div><input type="file" id="fCh1" accept="image/*" onchange="handleUpload(this,'chImg1','tCh1','spCh1')"></div>
+      <div class="a-slot" onclick="$('fCh2').click()"><img id="tCh2" src="" alt=""><div class="a-slot-ov"><span class="a-slot-lbl">Cap.03</span><button class="a-slot-btn">Enviar</button></div><div class="a-slot-spin" id="spCh2"><div class="spin-ring"></div><span>Enviando...</span></div><input type="file" id="fCh2" accept="image/*" onchange="handleUpload(this,'chImg2','tCh2','spCh2')"></div>
+      <div class="a-slot" onclick="$('fCh3').click()"><img id="tCh3" src="" alt=""><div class="a-slot-ov"><span class="a-slot-lbl">Cap.04</span><button class="a-slot-btn">Enviar</button></div><div class="a-slot-spin" id="spCh3"><div class="spin-ring"></div><span>Enviando...</span></div><input type="file" id="fCh3" accept="image/*" onchange="handleUpload(this,'chImg3','tCh3','spCh3')"></div>
+      <div class="a-slot" onclick="$('fCh4').click()"><img id="tCh4" src="" alt=""><div class="a-slot-ov"><span class="a-slot-lbl">Cap.05</span><button class="a-slot-btn">Enviar</button></div><div class="a-slot-spin" id="spCh4"><div class="spin-ring"></div><span>Enviando...</span></div><input type="file" id="fCh4" accept="image/*" onchange="handleUpload(this,'chImg4','tCh4','spCh4')"></div>
+      <div class="a-slot" onclick="$('fCh5').click()"><img id="tCh5" src="" alt=""><div class="a-slot-ov"><span class="a-slot-lbl">Cap.06</span><button class="a-slot-btn">Enviar</button></div><div class="a-slot-spin" id="spCh5"><div class="spin-ring"></div><span>Enviando...</span></div><input type="file" id="fCh5" accept="image/*" onchange="handleUpload(this,'chImg5','tCh5','spCh5')"></div>
+    </div>
+    <div class="a-div"></div>
+    <h2 class="a-ttl">Fotos Extras</h2>
+    <p class="a-sub">8 fotos do grid "Mais Memórias".</p>
+    <div class="a-grid">
+      <div class="a-slot" onclick="$('fM1').click()"><img id="tM1" src="" alt=""><div class="a-slot-ov"><span class="a-slot-lbl">Extra 1</span><button class="a-slot-btn">Enviar</button></div><div class="a-slot-spin" id="spM1"><div class="spin-ring"></div><span>Enviando...</span></div><input type="file" id="fM1" accept="image/*" onchange="handleUpload(this,'mini1','tM1','spM1')"></div>
+      <div class="a-slot" onclick="$('fM2').click()"><img id="tM2" src="" alt=""><div class="a-slot-ov"><span class="a-slot-lbl">Extra 2</span><button class="a-slot-btn">Enviar</button></div><div class="a-slot-spin" id="spM2"><div class="spin-ring"></div><span>Enviando...</span></div><input type="file" id="fM2" accept="image/*" onchange="handleUpload(this,'mini2','tM2','spM2')"></div>
+      <div class="a-slot" onclick="$('fM3').click()"><img id="tM3" src="" alt=""><div class="a-slot-ov"><span class="a-slot-lbl">Extra 3</span><button class="a-slot-btn">Enviar</button></div><div class="a-slot-spin" id="spM3"><div class="spin-ring"></div><span>Enviando...</span></div><input type="file" id="fM3" accept="image/*" onchange="handleUpload(this,'mini3','tM3','spM3')"></div>
+      <div class="a-slot" onclick="$('fM4').click()"><img id="tM4" src="" alt=""><div class="a-slot-ov"><span class="a-slot-lbl">Extra 4</span><button class="a-slot-btn">Enviar</button></div><div class="a-slot-spin" id="spM4"><div class="spin-ring"></div><span>Enviando...</span></div><input type="file" id="fM4" accept="image/*" onchange="handleUpload(this,'mini4','tM4','spM4')"></div>
+      <div class="a-slot" onclick="$('fM5').click()"><img id="tM5" src="" alt=""><div class="a-slot-ov"><span class="a-slot-lbl">Extra 5</span><button class="a-slot-btn">Enviar</button></div><div class="a-slot-spin" id="spM5"><div class="spin-ring"></div><span>Enviando...</span></div><input type="file" id="fM5" accept="image/*" onchange="handleUpload(this,'mini5','tM5','spM5')"></div>
+      <div class="a-slot" onclick="$('fM6').click()"><img id="tM6" src="" alt=""><div class="a-slot-ov"><span class="a-slot-lbl">Extra 6</span><button class="a-slot-btn">Enviar</button></div><div class="a-slot-spin" id="spM6"><div class="spin-ring"></div><span>Enviando...</span></div><input type="file" id="fM6" accept="image/*" onchange="handleUpload(this,'mini6','tM6','spM6')"></div>
+      <div class="a-slot" onclick="$('fM7').click()"><img id="tM7" src="" alt=""><div class="a-slot-ov"><span class="a-slot-lbl">Extra 7</span><button class="a-slot-btn">Enviar</button></div><div class="a-slot-spin" id="spM7"><div class="spin-ring"></div><span>Enviando...</span></div><input type="file" id="fM7" accept="image/*" onchange="handleUpload(this,'mini7','tM7','spM7')"></div>
+      <div class="a-slot" onclick="$('fM8').click()"><img id="tM8" src="" alt=""><div class="a-slot-ov"><span class="a-slot-lbl">Extra 8</span><button class="a-slot-btn">Enviar</button></div><div class="a-slot-spin" id="spM8"><div class="spin-ring"></div><span>Enviando...</span></div><input type="file" id="fM8" accept="image/*" onchange="handleUpload(this,'mini8','tM8','spM8')"></div>
+    </div>
+    <div class="a-div"></div>
+    <h2 class="a-ttl">Fotos de Fundo</h2>
+    <div class="a-grid" style="grid-template-columns:repeat(3,minmax(0,150px));max-width:480px;">
+      <div class="a-slot" onclick="$('fAbout').click()"><img id="tAbout" src="" alt=""><div class="a-slot-ov"><span class="a-slot-lbl">Sobre</span><button class="a-slot-btn">Enviar</button></div><div class="a-slot-spin" id="spAbout"><div class="spin-ring"></div><span>Enviando...</span></div><input type="file" id="fAbout" accept="image/*" onchange="handleUpload(this,'aboutImg','tAbout','spAbout')"></div>
+      <div class="a-slot" onclick="$('fQuo').click()"><img id="tQuo" src="" alt=""><div class="a-slot-ov"><span class="a-slot-lbl">Citação</span><button class="a-slot-btn">Enviar</button></div><div class="a-slot-spin" id="spQuo"><div class="spin-ring"></div><span>Enviando...</span></div><input type="file" id="fQuo" accept="image/*" onchange="handleUpload(this,'quoteImg','tQuo','spQuo')"></div>
+      <div class="a-slot" onclick="$('fCta').click()"><img id="tCta" src="" alt=""><div class="a-slot-ov"><span class="a-slot-lbl">CTA</span><button class="a-slot-btn">Enviar</button></div><div class="a-slot-spin" id="spCta"><div class="spin-ring"></div><span>Enviando...</span></div><input type="file" id="fCta" accept="image/*" onchange="handleUpload(this,'ctaImg','tCta','spCta')"></div>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-top:20px;line-height:1.7">💡 Cada foto é enviada automaticamente para a nuvem assim que você seleciona. Sem necessidade de clicar em Salvar.</p>
+  </div>
+
+  <!-- TEXTOS -->
+  <div class="a-pnl" id="tp-txt">
+    <h2 class="a-ttl">✏️ Textos dos Capítulos</h2>
+    <p class="a-sub">Edite o número, tag, título e descrição de cada capítulo.</p>
+    <div id="chEditors"></div>
+    <div class="a-div"></div>
+    <h2 class="a-ttl">Textos Gerais</h2>
+    <div class="a-g2">
+      <div class="a-fg"><label class="a-lbl">Hero — Linha topo</label><input class="a-inp" id="aHeroBadge"></div>
+      <div class="a-fg"><label class="a-lbl">Hero — Título</label><input class="a-inp" id="aHeroTitle"></div>
+      <div class="a-fg" style="grid-column:1/-1"><label class="a-lbl">Hero — Descrição</label><textarea class="a-inp" id="aHeroSub" rows="2"></textarea></div>
+      <div class="a-fg"><label class="a-lbl">Citação</label><textarea class="a-inp" id="aQuoteText" rows="3"></textarea></div>
+      <div class="a-fg"><label class="a-lbl">Autor da citação</label><input class="a-inp" id="aQuoteAuthor"></div>
+      <div class="a-fg"><label class="a-lbl">Sobre — Título</label><input class="a-inp" id="aAboutTitle"></div>
+      <div class="a-fg" style="grid-column:1/-1"><label class="a-lbl">Sobre — Texto</label><textarea class="a-inp" id="aAboutBody" rows="4"></textarea></div>
+      <div class="a-fg"><label class="a-lbl">Assinatura</label><input class="a-inp" id="aAboutSig"></div>
+      <div class="a-fg"><label class="a-lbl">CTA — Título</label><input class="a-inp" id="aCtaTitle"></div>
+      <div class="a-fg"><label class="a-lbl">Rodapé — Tagline</label><input class="a-inp" id="aFooterTag"></div>
+      <div class="a-fg"><label class="a-lbl">Copyright</label><input class="a-inp" id="aCopy"></div>
+    </div>
+    <button class="a-save" id="btnSaveTxt">Salvar Textos →</button>
+    <div class="a-ok" id="txtOk">✓ Textos salvos e visíveis para todos!</div>
+    <div class="a-err" id="txtErr"></div>
+  </div>
+
+  <!-- DEPOIMENTOS -->
+  <div class="a-pnl" id="tp-tst">
+    <h2 class="a-ttl">💬 Depoimentos</h2>
+    <p class="a-sub">Edite os depoimentos e clique em Salvar.</p>
+    <div id="testiEditors"></div>
+    <button class="a-save" id="btnSaveTst">Salvar Depoimentos →</button>
+    <div class="a-ok" id="tstOk">✓ Salvo para todos!</div>
+    <div class="a-err" id="tstErr"></div>
+  </div>
+
+  <!-- NÚMEROS -->
+  <div class="a-pnl" id="tp-num">
+    <h2 class="a-ttl">📊 Estatísticas</h2>
+    <p class="a-sub">Valores e labels dos números animados.</p>
+    <div class="a-g2">
+      <div class="a-fg"><label class="a-lbl">Casamentos (valor)</label><input class="a-inp" type="number" id="aSt1"></div>
+      <div class="a-fg"><label class="a-lbl">Casamentos (label)</label><input class="a-inp" id="aSL1"></div>
+      <div class="a-fg"><label class="a-lbl">Experiência (anos)</label><input class="a-inp" type="number" id="aSt2"></div>
+      <div class="a-fg"><label class="a-lbl">Experiência (label)</label><input class="a-inp" id="aSL2"></div>
+      <div class="a-fg"><label class="a-lbl">Fotos (em mil)</label><input class="a-inp" type="number" id="aSt3"></div>
+      <div class="a-fg"><label class="a-lbl">Fotos (label)</label><input class="a-inp" id="aSL3"></div>
+      <div class="a-fg"><label class="a-lbl">Estados (valor)</label><input class="a-inp" type="number" id="aSt4"></div>
+      <div class="a-fg"><label class="a-lbl">Estados (label)</label><input class="a-inp" id="aSL4"></div>
+    </div>
+    <button class="a-save" id="btnSaveNum">Salvar Números →</button>
+    <div class="a-ok" id="numOk">✓ Salvo para todos!</div>
+    <div class="a-err" id="numErr"></div>
+  </div>
+
+  <!-- CONTATOS -->
+  <div class="a-pnl" id="tp-ctt">
+    <h2 class="a-ttl">📞 Contatos</h2>
+    <p class="a-sub">Links e número de WhatsApp usados nos botões e rodapé.</p>
+    <div class="a-g2">
+      <div class="a-fg"><label class="a-lbl">WhatsApp (DDI+DDD+número)</label><input class="a-inp" id="aWa" placeholder="+55 85 99999-9999"></div>
+      <div class="a-fg"><label class="a-lbl">Mensagem automática</label><input class="a-inp" id="aWaMsg"></div>
+      <div class="a-fg"><label class="a-lbl">Instagram (URL)</label><input class="a-inp" id="aIg" placeholder="https://instagram.com/scweddings"></div>
+      <div class="a-fg"><label class="a-lbl">Facebook (URL)</label><input class="a-inp" id="aFb" placeholder="https://facebook.com/scweddings"></div>
+    </div>
+    <button class="a-save" id="btnSaveCtt">Salvar Contatos →</button>
+    <div class="a-ok" id="cttOk">✓ Salvo para todos!</div>
+    <div class="a-err" id="cttErr"></div>
+  </div>
+
+  <!-- SENHA -->
+  <div class="a-pnl" id="tp-pwd">
+    <h2 class="a-ttl">🔒 Senha de Acesso</h2>
+    <p class="a-sub">Senha padrão: <strong>admin123</strong>. Altere após o primeiro acesso.</p>
+    <div class="a-g2">
+      <div class="a-fg"><label class="a-lbl">Nova Senha</label><input class="a-inp" type="password" id="newP" placeholder="••••••"></div>
+      <div class="a-fg"><label class="a-lbl">Confirmar</label><input class="a-inp" type="password" id="confP" placeholder="••••••"></div>
+    </div>
+    <button class="a-save" id="btnPwd" style="margin-top:20px">Atualizar Senha →</button>
+    <div class="a-ok" id="pwdOk">✓ Senha atualizada!</div>
+  </div>
+</div><!-- /admin -->
+
+<script>
+/* ══════════════════════════════════════════════
+   1. DEFAULTS — Single source of truth
+   NEVER store base64 here. Only URLs.
+══════════════════════════════════════════════ */
+const DEF = {
+  heroBadge:   'Filmes & Fotos para Casamentos · Ceará',
+  heroTitle:   'Momentos que ficam para <em>sempre</em>',
+  heroSub:     'Capturamos e filmamos a emoção real do seu grande dia com luz, arte e sentimento que atravessam o tempo.',
+  gallEye:     'A História de Amor em Imagens',
+  gallTitle:   'Cada foto conta um <em>capítulo único</em>',
+  gallDesc:    'Do primeiro olhar ao "sim" — preservamos cada instante com a delicadeza que ele merece.',
+  quoteText:   'Um casamento é um dia. Um bom casamento é uma vida inteira. Nossas produções guardam os dois.',
+  quoteAuthor: '— SC Weddings Production',
+  aboutEye:    'Sobre Nós',
+  aboutTitle:  'A arte de eternizar <em>amor</em>',
+  aboutBody:   'Somos uma produtora especializada em filmes e fotografias para casamentos. Desde 2015 percorremos o Brasil capturando cerimônias com um olhar autêntico — valorizando cada detalhe, cada olhar, cada lágrima de felicidade.<br><br>Nossa abordagem é discreta e próxima: queremos que você esqueça a câmera e viva intensamente o momento.',
+  aboutSig:    'SC Weddings',
+  testiEye:    'Depoimentos',
+  testiTitle:  'O que os casais <em>dizem</em>',
+  ctaEye:      'Reserve sua data',
+  ctaTitle:    'Vamos contar a história<br>do seu <em>grande dia?</em>',
+  footerTag:   'Produtora de Filmes & Fotos para Casamentos · Ceará',
+  footerCopy:  '© 2025 SC Weddings Production · Todos os direitos reservados',
+  vidEye:      'Nossos Filmes',
+  vidTitle:    'Cinema para o seu <em>grande dia</em>',
+  vidDesc:     'Filmes de casamento que emocionam para sempre — com direção de arte, trilha e narrativa únicas.',
+  waMsg:       'Olá! Vim pelo site e quero saber sobre filmes e fotos para casamento.',
+  wa: '', ig: '', fb: '',
+  st1:350, st2:10, st3:80, st4:12,
+  sl1:'Casamentos Realizados', sl2:'Anos de Experiência', sl3:'Fotos Entregues', sl4:'Estados Atendidos',
+  showVideo: false, showMini: true,
+  chapters: [
+    {num:'Cap. 01', tag:'O Começo',    title:'A Chegada da <em>Noiva</em>',       desc:'O momento em que as portas se abrem e o tempo parece pausar. O véu, o vestido, o nervosismo misturado com alegria — tudo isso merece ser eternizado com a delicadeza que o instante pede.'},
+    {num:'Cap. 02', tag:'Os Detalhes', title:'Cada <em>Detalhe</em> Importa',      desc:'As flores cuidadosamente escolhidas, o buquê que tremeu nas mãos, a aliança sobre o véu. São os pequenos detalhes que transformam memórias em obras de arte.'},
+    {num:'Cap. 03', tag:'A Cerimônia', title:'O <em>Sim</em> que Muda Tudo',       desc:'Diante de todos os que amam, duas almas escolhem uma à outra. Nossa lente captura a emoção pura desse sim eterno.'},
+    {num:'Cap. 04', tag:'As Emoções',  title:'Lágrimas de <em>Felicidade</em>',    desc:'A emoção que escapa nos olhos do noivo ao ver sua amada, ou nas mãos que se unem pela primeira vez. Somos especialistas em capturar o que as palavras não conseguem descrever.'},
+    {num:'Cap. 05', tag:'O Casal',     title:'Unidos para <em>Sempre</em>',        desc:'O momento do casal a sós, ainda na euforia do dia, com a leveza de quem acaba de viver o maior dia de suas vidas. Retratos cheios de amor genuíno e conexão real.'},
+    {num:'Cap. 06', tag:'A Celebração',title:'A Festa que <em>Transborda</em>',    desc:'Dança, risos, abraços e brindis. A recepção é onde a história continua sendo escrita, com cada convidado fazendo parte desse capítulo inesquecível.'},
+  ],
+  testis: [
+    {name:'Ana & Pedro',       date:'Fortaleza, 2024',        text:'As fotos e o filme ficaram incríveis. Cada imagem conta uma história e nos emociona toda vez que abrimos o álbum.'},
+    {name:'Camila & Lucas',    date:'Jericoacoara, 2024',      text:'Profissionalismo e sensibilidade únicos. Discretos durante a cerimônia mas capturaram absolutamente tudo.'},
+    {name:'Juliana & Rafael',  date:'Canindé, 2023',          text:'O filme é emocionante — assistimos toda vez que queremos reviver o nosso dia. Arte pura.'},
+    {name:'Fernanda & Marcos', date:'Fortaleza, 2023',        text:'Desde o planejamento até a entrega, tudo foi perfeito. Um time que realmente se importa com a história de cada casal.'},
+  ],
+  videos: Array(6).fill(null).map((_,i)=>({url:'', title:'Vídeo '+(i+1), desc:'', tag:''})),
+  images: {
+    heroImg:  'https://images.unsplash.com/photo-1519741497674-611481863552?w=1400&q=85',
+    chImg0:   'https://images.unsplash.com/photo-1606800052052-a08af7148866?w=900&q=80',
+    chImg1:   'https://images.unsplash.com/photo-1532712938310-34cb3982ef74?w=900&q=80',
+    chImg2:   'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=900&q=80',
+    chImg3:   'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=900&q=80',
+    chImg4:   'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=900&q=80',
+    chImg5:   'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=900&q=80',
+    mini1:    'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=600&q=75',
+    mini2:    'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=600&q=75',
+    mini3:    'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&q=75',
+    mini4:    'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=600&q=75',
+    mini5:    'https://images.unsplash.com/photo-1507504031003-b417219a0fde?w=600&q=75',
+    mini6:    'https://images.unsplash.com/photo-1535378273068-9bb67d5beacd?w=600&q=75',
+    mini7:    'https://images.unsplash.com/photo-1606216840931-cdfd5dc2cbce?w=600&q=75',
+    mini8:    'https://images.unsplash.com/photo-1553808989-9d36e946d6c7?w=600&q=75',
+    aboutImg: 'https://images.unsplash.com/photo-1625731052193-7e4dd698b7f8?w=800&q=80',
+    quoteImg: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=1200&q=80',
+    ctaImg:   'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=1200&q=80',
+    miniL1:'Detalhes', miniL2:'Cerimônia', miniL3:'Casal', miniL4:'Família',
+    miniL5:'Flores',   miniL6:'Celebração',miniL7:'Alianças',miniL8:'Festa',
+  }
+};
+
+/* ══════════════════════════════════════════════
+   2. DEEP MERGE — safe merge that never loses fields
+══════════════════════════════════════════════ */
+function deepMerge(base, override) {
+  if (!override || typeof override !== 'object') return base;
+  const result = Object.assign({}, base);
+  for (const key of Object.keys(override)) {
+    const bv = base[key], ov = override[key];
+    if (ov === null || ov === undefined) continue; // never overwrite with null
+    if (typeof bv === 'object' && !Array.isArray(bv) && typeof ov === 'object' && !Array.isArray(ov)) {
+      result[key] = deepMerge(bv, ov);
+    } else {
+      result[key] = ov;
+    }
+  }
+  return result;
+}
+
+/* ══════════════════════════════════════════════
+   3. DATA LAYER
+══════════════════════════════════════════════ */
+const JSONBIN = 'https://api.jsonbin.io/v3/b';
+const IMGBB   = 'https://api.imgbb.com/1/upload';
+
+function getBinId()  { return new URLSearchParams(location.search).get('bin') || localStorage.getItem('scwBinId') || ''; }
+function getMKey()   { return localStorage.getItem('scwMKey') || ''; }
+function getIBKey()  { return localStorage.getItem('scwIBKey') || ''; }
+function getPass()   { return localStorage.getItem('scwPass') || 'admin123'; }
+
+/** Always returns a fully merged object — NEVER broken */
+function getData() {
+  try {
+    const raw = JSON.parse(localStorage.getItem('scwData') || '{}');
+    // strip any accidentally stored base64 (safety net)
+    if (raw.images) {
+      for (const k of Object.keys(raw.images)) {
+        if (typeof raw.images[k] === 'string' && raw.images[k].startsWith('data:')) {
+          delete raw.images[k];
+        }
+      }
+    }
+    return deepMerge(DEF, raw);
+  } catch { return Object.assign({}, DEF); }
+}
+
+function saveLocal(d) {
+  try { localStorage.setItem('scwData', JSON.stringify(d)); } catch(e) {
+    console.warn('localStorage full, clearing and retrying');
+    localStorage.removeItem('scwData');
+    try { localStorage.setItem('scwData', JSON.stringify(d)); } catch {}
+  }
+}
+
+async function fetchRemote() {
+  const id = getBinId(), key = getMKey();
+  if (!id || !key) return null;
+  try {
+    const r = await fetch(`${JSONBIN}/${id}/latest`, { headers:{'X-Master-Key':key} });
+    if (!r.ok) return null;
+    return (await r.json()).record || null;
+  } catch { return null; }
+}
+
+async function pushRemote(d) {
+  // Never push base64 to remote
+  const safe = JSON.parse(JSON.stringify(d));
+  if (safe.images) {
+    for (const k of Object.keys(safe.images)) {
+      if (typeof safe.images[k] === 'string' && safe.images[k].startsWith('data:')) delete safe.images[k];
+    }
+  }
+  const id = getBinId(), key = getMKey();
+  if (!id || !key) { saveLocal(safe); return {ok:false, msg:'JSONbin não configurado. Dados salvos apenas neste dispositivo.'}; }
+  try {
+    const r = await fetch(`${JSONBIN}/${id}`, {
+      method:'PUT',
+      headers:{'Content-Type':'application/json','X-Master-Key':key},
+      body: JSON.stringify(safe)
+    });
+    saveLocal(safe);
+    return r.ok ? {ok:true} : {ok:false, msg:'Erro '+r.status+' no JSONbin. Verifique a Master Key.'};
+  } catch { saveLocal(safe); return {ok:false, msg:'Sem conexão. Salvo localmente.'}; }
+}
+
+async function mergeAndPush(patch) {
+  // SAFE patch: load full data, merge patch, push
+  const d = getData();
+  const updated = deepMerge(d, patch);
+  saveLocal(updated);          // instant local
+  return pushRemote(updated);  // then remote
+}
+
+/* ══════════════════════════════════════════════
+   4. DOM HELPERS
+══════════════════════════════════════════════ */
+const $ = id => document.getElementById(id);
+const $$ = s => document.querySelectorAll(s);
+function el(id, val, isHtml=false) {
+  const e = $(id);
+  if (!e || val == null) return;
+  isHtml ? (e.innerHTML = val) : (e.textContent = val);
+}
+function scrollS(id) { $(id) && $(id).scrollIntoView({behavior:'smooth'}); }
+function setImg(imgId, src) {
+  if (!src) return;
+  const e = $(imgId);
+  if (e) e.src = src;
+}
+function setAdminThumb(tid, src) {
+  if (!src) return;
+  const e = $(tid);
+  if (e && !src.startsWith('data:')) e.src = src;
+  else if (e) e.src = src; // ok for admin thumbs locally
+}
+function fb(okId, errId, ok, msg) {
+  const o=$(okId), er=$(errId);
+  if(o){ o.style.display=ok?'block':'none'; if(ok&&msg)o.textContent=msg; }
+  if(er){ er.style.display=ok?'none':'block'; if(!ok&&msg)er.textContent=msg; }
+  setTimeout(()=>{ if(o)o.style.display='none'; if(er)er.style.display='none'; }, 6000);
+}
+
+/* ══════════════════════════════════════════════
+   5. RENDER PAGE — applies full data, always has defaults
+══════════════════════════════════════════════ */
+function render(d) {
+  // scalar texts (safe — DEF guarantees no nulls)
+  el('heroBadge', d.heroBadge);
+  el('heroTitle', d.heroTitle, true);
+  el('heroSub',   d.heroSub,   true);
+  el('gallEye',   d.gallEye);
+  el('gallTitle', d.gallTitle, true);
+  el('gallDesc',  d.gallDesc);
+  el('quoteText', d.quoteText);
+  el('quoteAuthor', d.quoteAuthor);
+  el('aboutEye',   d.aboutEye);
+  el('aboutTitle', d.aboutTitle, true);
+  el('aboutBody',  d.aboutBody, true);
+  el('aboutSig',   d.aboutSig);
+  el('testiEye',   d.testiEye);
+  el('testiTitle', d.testiTitle, true);
+  el('ctaEye',     d.ctaEye);
+  el('ctaTitle',   d.ctaTitle, true);
+  el('footerTag',  d.footerTag);
+  el('footerCopy', d.footerCopy);
+  el('vidEye',     d.vidEye);
+  el('vidTitle',   d.vidTitle, true);
+  el('vidDesc',    d.vidDesc);
+
+  // stats labels
+  el('sL1', d.sl1); el('sL2', d.sl2); el('sL3', d.sl3); el('sL4', d.sl4);
+
+  // chapters
+  d.chapters.forEach((c, i) => {
+    el(`chNum${i}`,   c.num);
+    el(`chTag${i}`,   c.tag);
+    el(`chTitle${i}`, c.title, true);
+    el(`chDesc${i}`,  c.desc);
+  });
+
+  // testis
+  d.testis.forEach((t, i) => {
+    el(`tn${i}`, t.name);
+    el(`td${i}`, t.date);
+    el(`tt${i}`, t.text);
+  });
+
+  // images — only set if src is a real URL (not empty/base64)
+  const imgs = d.images;
+  const imgIds = ['heroImg','chImg0','chImg1','chImg2','chImg3','chImg4','chImg5',
+    'mini1','mini2','mini3','mini4','mini5','mini6','mini7','mini8',
+    'aboutImg','quoteImg','ctaImg'];
+  imgIds.forEach(id => { if (imgs[id] && !imgs[id].startsWith('data:')) setImg(id, imgs[id]); });
+
+  // mini labels
+  ['1','2','3','4','5','6','7','8'].forEach(n => { el('miniL'+n, imgs['miniL'+n]||''); });
+
+  // contacts / buttons
+  const waNum = (d.wa||'').replace(/\D/g,'');
+  const waMsg = encodeURIComponent(d.waMsg||DEF.waMsg);
+  const waUrl = waNum ? `https://wa.me/${waNum}?text=${waMsg}` : '#';
+  const onWa  = () => waNum ? window.open(waUrl,'_blank') : alert('Configure o WhatsApp no painel Admin → Contatos.');
+  $('waBtn').onclick   = onWa;
+  $('floatWa').onclick = onWa;
+  $('fWa').href        = waUrl;
+  if (d.ig) { $('igBtn').onclick = ()=>window.open(d.ig,'_blank'); $('fInsta').href = d.ig; }
+  if (d.fb) $('fFace').href = d.fb;
+
+  // visibility
+  $('videoSec').classList.toggle('hidden', !d.showVideo);
+  $('miniSec').classList.toggle('hidden',  !d.showMini);
+  [$('deskVidLink'),$('mobVidLink')].forEach(e => { if(e) e.style.display = d.showVideo ? '' : 'none'; });
+
+  // videos
+  renderVideos(d);
+
+  // admin thumbs (when admin is open)
+  const thumbMap = {
+    heroImg:'tHero', chImg0:'tCh0', chImg1:'tCh1', chImg2:'tCh2',
+    chImg3:'tCh3', chImg4:'tCh4', chImg5:'tCh5',
+    mini1:'tM1', mini2:'tM2', mini3:'tM3', mini4:'tM4',
+    mini5:'tM5', mini6:'tM6', mini7:'tM7', mini8:'tM8',
+    aboutImg:'tAbout', quoteImg:'tQuo', ctaImg:'tCta'
+  };
+  for (const [pid, tid] of Object.entries(thumbMap)) {
+    const src = imgs[pid];
+    if (src && !src.startsWith('data:') && $(tid)) $(tid).src = src;
+  }
+}
+
+/* ══════════════════════════════════════════════
+   6. VIDEOS
+══════════════════════════════════════════════ */
+function ytId(url) {
+  if (!url) return null;
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([^?&\s]+)/);
+  return m ? m[1] : null;
+}
+function renderVideos(d) {
+  const vids = (d.videos||[]).filter(v=>ytId(v.url));
+  const grid = $('vidGrid'); if(!grid) return;
+  grid.innerHTML = '';
+  if (!vids.length) {
+    grid.innerHTML='<p style="color:rgba(255,255,255,.3);font-size:14px;padding:0 20px 40px;grid-column:1/-1">Nenhum vídeo cadastrado. Adicione links do YouTube na aba Vídeos do Admin.</p>';
+    return;
+  }
+  vids.forEach(v => {
+    const id = ytId(v.url);
+    const c = document.createElement('div'); c.className='vid-card';
+    c.innerHTML=`<div class="vid-thumb" onclick="openVlb('${id}')"><img src="https://img.youtube.com/vi/${id}/maxresdefault.jpg" alt="${v.title||''}" loading="lazy" onerror="this.src='https://img.youtube.com/vi/${id}/hqdefault.jpg'"><div class="play-btn"><div class="play-arr"></div></div></div><div class="vid-info"><div class="vid-ttl">${v.title||'Sem título'}</div><div class="vid-dsc">${v.desc||''}</div>${v.tag?`<div class="vid-tag"><div class="ch-tag-line" style="display:inline-block;width:20px;height:1px;background:var(--gold);vertical-align:middle;margin-right:6px"></div><span>${v.tag}</span></div>`:''}</div>`;
+    grid.appendChild(c);
+  });
+}
+function openVlb(ytid){ $('vlbFrame').src=`https://www.youtube.com/embed/${ytid}?autoplay=1&rel=0`; $('vlb').classList.add('on'); document.body.style.overflow='hidden'; }
+function closeVlb(){ $('vlbFrame').src=''; $('vlb').classList.remove('on'); document.body.style.overflow=''; }
+$('vlbClose').addEventListener('click', closeVlb);
+$('vlb').addEventListener('click', e=>{ if(e.target===$('vlb'))closeVlb(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape')closeVlb(); });
+
+/* ══════════════════════════════════════════════
+   7. IMAGE UPLOAD
+══════════════════════════════════════════════ */
+async function toJpeg(file, maxPx=1400, q=0.82) {
+  return new Promise(res => {
+    const img = new Image(), url = URL.createObjectURL(file);
+    img.onload = () => {
+      const r = Math.min(maxPx/Math.max(img.width,img.height,1), 1);
+      const w = Math.round(img.width*r), h = Math.round(img.height*r);
+      const cv = document.createElement('canvas'); cv.width=w; cv.height=h;
+      cv.getContext('2d').drawImage(img,0,0,w,h);
+      URL.revokeObjectURL(url);
+      res(cv.toDataURL('image/jpeg', q));
+    };
+    img.onerror = ()=>{ URL.revokeObjectURL(url); res(null); };
+    img.src = url;
+  });
+}
+
+async function uploadImgbb(b64) {
+  const key = getIBKey(); if(!key) return null;
+  try {
+    const fd = new FormData();
+    fd.append('image', b64.replace(/^data:image\/\w+;base64,/,''));
+    const r = await fetch(`${IMGBB}?key=${key}`, {method:'POST',body:fd});
+    const j = await r.json();
+    return j.data?.display_url || j.data?.url || null;
+  } catch { return null; }
+}
+
+async function handleUpload(input, pageId, thumbId, spId) {
+  if(!input.files||!input.files[0]) return;
+  const sp=$(spId); if(sp) sp.classList.add('on');
+  input.value='';
+
+  const b64 = await toJpeg(input.files[0]);
+  if(!b64){ if(sp)sp.classList.remove('on'); return; }
+
+  // Show locally immediately (base64 — only in DOM, never saved to data)
+  setImg(pageId, b64);
+  if($(thumbId)) $(thumbId).src = b64;
+
+  // Try ImgBB
+  const ibKey = getIBKey();
+  let finalUrl = null;
+  if (ibKey) {
+    finalUrl = await uploadImgbb(b64);
+  }
+
+  if (finalUrl) {
+    // Got a real URL → update DOM & save
+    setImg(pageId, finalUrl);
+    if($(thumbId)) $(thumbId).src = finalUrl;
+    await mergeAndPush({ images: { [pageId]: finalUrl } });
+  } else {
+    // No ImgBB → warn; image shown locally in DOM but NOT saved to data
+    if(ibKey) {
+      alert('⚠️ Falha ao enviar para ImgBB. A foto aparece aqui mas não será visível para outros visitantes. Verifique sua API Key.');
+    } else {
+      alert('⚠️ ImgBB não configurado.\nA foto aparece apenas neste dispositivo.\nConfigure o ImgBB na aba Configuração para que todos vejam.');
+    }
+  }
+
+  if(sp) sp.classList.remove('on');
+}
+
+/* ══════════════════════════════════════════════
+   8. NAV
+══════════════════════════════════════════════ */
+window.addEventListener('scroll', ()=>$('nav').classList.toggle('solid', scrollY>40), {passive:true});
+const ham=$('ham'), mob=$('mobMenu');
+ham.addEventListener('click', ()=>{
+  ham.classList.toggle('open'); mob.classList.toggle('open');
+  document.body.style.overflow = mob.classList.contains('open')?'hidden':'';
+});
+function closeMob(){ ham.classList.remove('open'); mob.classList.remove('open'); document.body.style.overflow=''; }
+
+/* ══════════════════════════════════════════════
+   9. SCROLL REVEAL
+══════════════════════════════════════════════ */
+const ro = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('vis'); }),{threshold:.08});
+$$('.reveal').forEach(e=>ro.observe(e));
+
+/* ══════════════════════════════════════════════
+   10. COUNTER
+══════════════════════════════════════════════ */
+function animN(el, target, suf='') {
+  let s=null;
+  const run=ts=>{ if(!s)s=ts; const p=Math.min((ts-s)/1600,1); el.innerHTML=Math.floor(p*target)+(suf||''); if(p<1)requestAnimationFrame(run); else el.innerHTML=target+(suf||''); };
+  requestAnimationFrame(run);
+}
+let counted=false;
+new IntersectionObserver(es=>{
+  if(es[0].isIntersecting&&!counted){ counted=true; const d=getData();
+    animN($('sN1'),+d.st1); animN($('sN2'),+d.st2);
+    animN($('sN3'),+d.st3,'<sup>k</sup>'); animN($('sN4'),+d.st4);
+  }
+},{threshold:.3}).observe(document.querySelector('.stats'));
+
+/* ══════════════════════════════════════════════
+   11. TESTIMONIAL DOTS
+══════════════════════════════════════════════ */
+function scrollTesti(i){ const t=$('testiScroll'),c=t.children[i]; if(c)t.scrollTo({left:c.offsetLeft,behavior:'smooth'}); $$('.tdot').forEach((d,j)=>d.classList.toggle('act',j===i)); }
+$('testiScroll').addEventListener('scroll', function(){
+  const cs=[...this.children],mid=this.scrollLeft+this.offsetWidth/2;
+  let ci=0,mn=Infinity; cs.forEach((c,i)=>{const d=Math.abs(c.offsetLeft+c.offsetWidth/2-mid);if(d<mn){mn=d;ci=i;}});
+  $$('.tdot').forEach((d,j)=>d.classList.toggle('act',j===ci));
+},{passive:true});
+
+/* ══════════════════════════════════════════════
+   12. ADMIN TABS
+══════════════════════════════════════════════ */
+$$('.a-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    $$('.a-tab').forEach(t=>t.classList.remove('act'));
+    $$('.a-pnl').forEach(p=>p.classList.remove('act'));
+    tab.classList.add('act');
+    $(tab.dataset.tab).classList.add('act');
+  });
+});
+
+/* ══════════════════════════════════════════════
+   13. LOGIN
+══════════════════════════════════════════════ */
+$('openLoginBtn').addEventListener('click',()=>{
+  $('loginOverlay').classList.add('on');
+  $('loginErr').style.display='none';
+  $('loginUser').value=''; $('loginPass').value='';
+  setTimeout(()=>$('loginUser').focus(),300);
+});
+$('closeLoginBtn').addEventListener('click',()=>$('loginOverlay').classList.remove('on'));
+$('loginOverlay').addEventListener('click',e=>{ if(e.target===$('loginOverlay'))$('loginOverlay').classList.remove('on'); });
+function doLogin(){
+  if($('loginUser').value.trim()==='admin'&&$('loginPass').value===getPass()){
+    $('loginOverlay').classList.remove('on'); openAdmin();
+  } else { $('loginErr').style.display='block'; }
+}
+$('loginBtn').addEventListener('click',doLogin);
+$('loginPass').addEventListener('keydown',e=>{ if(e.key==='Enter')doLogin(); });
+
+/* ══════════════════════════════════════════════
+   14. ADMIN OPEN / CLOSE
+══════════════════════════════════════════════ */
+function openAdmin(){ loadAdminFields(); $('admin').classList.add('on'); document.body.style.overflow='hidden'; }
+$('closeAdminBtn').addEventListener('click',()=>{ $('admin').classList.remove('on'); document.body.style.overflow=''; });
+
+/* ══════════════════════════════════════════════
+   15. BUILD ADMIN EDITORS (dynamic)
+══════════════════════════════════════════════ */
+function accTog(bodyId,togId){ const b=$(bodyId),t=$(togId); const o=b.classList.toggle('open'); if(t)t.classList.toggle('open',o); }
+
+function buildChEditors(d) {
+  const list=$('chEditors'); list.innerHTML='';
+  d.chapters.forEach((c,i)=>{
+    const div=document.createElement('div'); div.className='acc';
+    div.innerHTML=`<div class="acc-hd" onclick="accTog('cB${i}','cT${i}')"><span class="acc-nm">${c.num} — ${c.title.replace(/<[^>]+>/g,'')}</span><button class="acc-tg" id="cT${i}">▾</button></div><div class="acc-bd" id="cB${i}"><div class="a-g2" style="margin-top:4px"><div class="a-fg"><label class="a-lbl">Número</label><input class="a-inp" id="cN${i}" value="${c.num}"></div><div class="a-fg"><label class="a-lbl">Tag</label><input class="a-inp" id="cTag${i}" value="${c.tag}"></div><div class="a-fg" style="grid-column:1/-1"><label class="a-lbl">Título</label><input class="a-inp" id="cTi${i}" value="${c.title.replace(/"/g,'&quot;')}"></div><div class="a-fg" style="grid-column:1/-1"><label class="a-lbl">Descrição</label><textarea class="a-inp" id="cD${i}" rows="3">${c.desc}</textarea></div></div></div>`;
+    list.appendChild(div);
+  });
+}
+
+function buildTestiEditors(d) {
+  const list=$('testiEditors'); list.innerHTML='';
+  d.testis.forEach((t,i)=>{
+    const div=document.createElement('div'); div.className='acc';
+    div.innerHTML=`<div class="acc-hd" onclick="accTog('tB${i}','tTg${i}')"><span class="acc-nm">${t.name}</span><button class="acc-tg" id="tTg${i}">▾</button></div><div class="acc-bd" id="tB${i}"><div class="a-g2" style="margin-top:4px"><div class="a-fg"><label class="a-lbl">Nome do Casal</label><input class="a-inp" id="tiN${i}" value="${t.name}"></div><div class="a-fg"><label class="a-lbl">Data / Local</label><input class="a-inp" id="tiD${i}" value="${t.date}"></div><div class="a-fg" style="grid-column:1/-1"><label class="a-lbl">Depoimento</label><textarea class="a-inp" id="tiT${i}" rows="3">${t.text}</textarea></div></div></div>`;
+    list.appendChild(div);
+  });
+}
+
+function buildVidEditors(d) {
+  const list=$('vidEditList'); list.innerHTML='';
+  d.videos.forEach((v,i)=>{
+    const id=ytId(v.url);
+    const div=document.createElement('div'); div.className='acc';
+    div.innerHTML=`<div class="acc-hd" onclick="accTog('vB${i}','vTg${i}')"><span class="acc-nm">${v.title||'Vídeo '+(i+1)}</span><button class="acc-tg" id="vTg${i}">▾</button></div><div class="acc-bd" id="vB${i}">${id?`<img class="vid-prev" src="https://img.youtube.com/vi/${id}/maxresdefault.jpg" onerror="this.src='https://img.youtube.com/vi/${id}/hqdefault.jpg'" loading="lazy">`:''}<div class="a-g2" style="margin-top:4px"><div class="a-fg" style="grid-column:1/-1"><label class="a-lbl">URL do YouTube</label><input class="a-inp" id="vUrl${i}" value="${v.url||''}"><p class="vid-hint">Deixe vazio para ocultar este card.</p></div><div class="a-fg"><label class="a-lbl">Título</label><input class="a-inp" id="vTit${i}" value="${v.title||''}"></div><div class="a-fg"><label class="a-lbl">Tag</label><input class="a-inp" id="vTag${i}" value="${v.tag||''}"></div><div class="a-fg" style="grid-column:1/-1"><label class="a-lbl">Descrição</label><input class="a-inp" id="vDes${i}" value="${v.desc||''}"></div></div></div>`;
+    list.appendChild(div);
+  });
+}
+
+/* ══════════════════════════════════════════════
+   16. LOAD ADMIN FIELDS
+══════════════════════════════════════════════ */
+function loadAdminFields() {
+  const d = getData();
+
+  buildChEditors(d);
+  buildTestiEditors(d);
+  buildVidEditors(d);
+
+  // General texts
+  const map = {aHeroBadge:'heroBadge',aHeroTitle:'heroTitle',aHeroSub:'heroSub',aQuoteText:'quoteText',aQuoteAuthor:'quoteAuthor',aAboutTitle:'aboutTitle',aAboutBody:'aboutBody',aAboutSig:'aboutSig',aCtaTitle:'ctaTitle',aFooterTag:'footerTag',aCopy:'footerCopy'};
+  Object.entries(map).forEach(([aid,key])=>{ const e=$(aid); if(e) e.value=(d[key]||'').replace(/<[^>]*>/g,''); });
+
+  // Contacts
+  $('aWa').value    = d.wa||'';
+  $('aWaMsg').value = d.waMsg||DEF.waMsg;
+  $('aIg').value    = d.ig||'';
+  $('aFb').value    = d.fb||'';
+
+  // Stats
+  ['1','2','3','4'].forEach(n=>{ $('aSt'+n).value=d['st'+n]||DEF['st'+n]; $('aSL'+n).value=d['sl'+n]||DEF['sl'+n]; });
+
+  // Toggles
+  $('togVideo').checked = !!d.showVideo;
+  $('togMini').checked  = d.showMini!==false;
+
+  // Setup
+  $('cfgMKey').value   = getMKey()  ? '••••••••' : '';
+  $('cfgBinId').value  = getBinId() || '';
+  $('cfgImgbbKey').value = getIBKey() ? '••••••••' : '';
+  updateCfgStatus();
+}
+
+/* ══════════════════════════════════════════════
+   17. SAVE HANDLERS
+══════════════════════════════════════════════ */
+async function doSave(patch, okId, errId, btnId) {
+  const btn=$(btnId);
+  if(btn){ btn.disabled=true; btn.textContent='Salvando...'; }
+  const r = await mergeAndPush(patch);
+  render(getData());
+  if(btn){ btn.disabled=false; btn.textContent=btn.textContent.replace('Salvando...','Salvar'); }
+  fb(okId, errId, r.ok, r.ok ? '✓ Salvo e visível para todos!' : (r.msg||'Erro ao salvar.'));
+}
+
+// Sections
+$('btnSaveSec').addEventListener('click', ()=>{
+  doSave({showVideo:$('togVideo').checked, showMini:$('togMini').checked}, 'secOk','secErr','btnSaveSec');
+});
+
+// Videos
+$('btnSaveVid').addEventListener('click', ()=>{
+  const d=getData();
+  const videos = d.videos.map((_,i)=>({url:$('vUrl'+i)?.value||'',title:$('vTit'+i)?.value||'',tag:$('vTag'+i)?.value||'',desc:$('vDes'+i)?.value||''}));
+  doSave({videos}, 'vidOk','vidErr','btnSaveVid');
+});
+
+// Texts
+$('btnSaveTxt').addEventListener('click', ()=>{
+  const d=getData();
+  const chapters = d.chapters.map((_,i)=>({num:$('cN'+i)?.value||'',tag:$('cTag'+i)?.value||'',title:$('cTi'+i)?.value||'',desc:$('cD'+i)?.value||''}));
+  doSave({
+    heroBadge:$('aHeroBadge').value, heroTitle:$('aHeroTitle').value, heroSub:$('aHeroSub').value,
+    quoteText:$('aQuoteText').value, quoteAuthor:$('aQuoteAuthor').value,
+    aboutTitle:$('aAboutTitle').value, aboutBody:$('aAboutBody').value, aboutSig:$('aAboutSig').value,
+    ctaTitle:$('aCtaTitle').value, footerTag:$('aFooterTag').value, footerCopy:$('aCopy').value,
+    chapters
+  },'txtOk','txtErr','btnSaveTxt');
+});
+
+// Testis
+$('btnSaveTst').addEventListener('click', ()=>{
+  const d=getData();
+  const testis=d.testis.map((_,i)=>({name:$('tiN'+i)?.value||'',date:$('tiD'+i)?.value||'',text:$('tiT'+i)?.value||''}));
+  doSave({testis},'tstOk','tstErr','btnSaveTst');
+});
+
+// Stats
+$('btnSaveNum').addEventListener('click', ()=>{
+  doSave({st1:+$('aSt1').value,st2:+$('aSt2').value,st3:+$('aSt3').value,st4:+$('aSt4').value,sl1:$('aSL1').value,sl2:$('aSL2').value,sl3:$('aSL3').value,sl4:$('aSL4').value},'numOk','numErr','btnSaveNum');
+});
+
+// Contacts
+$('btnSaveCtt').addEventListener('click', ()=>{
+  doSave({wa:$('aWa').value,waMsg:$('aWaMsg').value,ig:$('aIg').value,fb:$('aFb').value},'cttOk','cttErr','btnSaveCtt');
+});
+
+// Password
+$('btnPwd').addEventListener('click', ()=>{
+  const np=$('newP').value, cp=$('confP').value;
+  if(!np)return alert('Digite a nova senha.');
+  if(np!==cp)return alert('As senhas não coincidem.');
+  localStorage.setItem('scwPass',np);
+  $('pwdOk').style.display='block'; $('newP').value=''; $('confP').value='';
+  setTimeout(()=>$('pwdOk').style.display='none',3000);
+});
+
+/* ══════════════════════════════════════════════
+   18. SETUP TAB
+══════════════════════════════════════════════ */
+function updateCfgStatus() {
+  $('imgbbStatus').innerHTML = getIBKey()
+    ? '<span class="badge-ok">✓ ImgBB OK</span>'
+    : '<span class="badge-warn">⚠ ImgBB não configurado</span>';
+  const hasAll = getBinId() && getMKey();
+  $('shareBox').style.display = hasAll ? 'block' : 'none';
+  if (hasAll) {
+    $('shareUrl').textContent = location.origin + location.pathname + '?bin=' + getBinId();
+  }
+}
+
+$('btnCreateBin').addEventListener('click', async ()=>{
+  const key = $('cfgMKey').value.trim();
+  if (!key || key.includes('•')) { alert('Cole sua Master Key do JSONbin.io.'); return; }
+  localStorage.setItem('scwMKey', key);
+  $('btnCreateBin').textContent='Criando...'; $('btnCreateBin').disabled=true;
+  try {
+    const r = await fetch('https://api.jsonbin.io/v3/b', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','X-Master-Key':key,'X-Bin-Name':'sc-weddings','X-Bin-Private':'false'},
+      body: JSON.stringify(getData())
+    });
+    const j = await r.json();
+    const binId = j.metadata?.id;
+    if (binId) {
+      localStorage.setItem('scwBinId', binId);
+      $('cfgBinId').value = binId;
+      fb('cfgBinOk','cfgBinErr',true,'✓ Armazenamento criado! Bin ID: '+binId+'. Compartilhe o link abaixo.');
+      updateCfgStatus();
+    } else {
+      fb('cfgBinOk','cfgBinErr',false,'Erro ao criar: '+(j.message||JSON.stringify(j)));
+    }
+  } catch(e) {
+    fb('cfgBinOk','cfgBinErr',false,'Sem conexão ou Master Key inválida.');
+  }
+  $('btnCreateBin').textContent='Criar Armazenamento'; $('btnCreateBin').disabled=false;
+});
+
+$('btnTestBin').addEventListener('click', async ()=>{
+  const key = $('cfgMKey').value.trim();
+  const binId = $('cfgBinId').value.trim();
+  if (key && !key.includes('•')) localStorage.setItem('scwMKey', key);
+  if (binId) localStorage.setItem('scwBinId', binId);
+  $('btnTestBin').textContent='Testando...'; $('btnTestBin').disabled=true;
+  const remote = await fetchRemote();
+  $('btnTestBin').textContent='Testar Conexão'; $('btnTestBin').disabled=false;
+  if (remote) {
+    const merged = deepMerge(DEF, remote);
+    saveLocal(merged); render(merged);
+    fb('cfgBinOk','cfgBinErr',true,'✓ Conexão OK! Dados carregados do armazenamento.');
+    updateCfgStatus();
+  } else {
+    fb('cfgBinOk','cfgBinErr',false,'Falha. Verifique Master Key e Bin ID.');
+  }
+});
+
+$('copyLinkBtn').addEventListener('click', ()=>{
+  navigator.clipboard.writeText($('shareUrl').textContent)
+    .then(()=>{ $('copyLinkBtn').textContent='Copiado!'; setTimeout(()=>$('copyLinkBtn').textContent='Copiar',2000); });
+});
+
+$('btnSaveImgbb').addEventListener('click', ()=>{
+  const key = $('cfgImgbbKey').value.trim();
+  if (!key || key.includes('•')) { alert('Cole sua API Key do ImgBB.'); return; }
+  localStorage.setItem('scwIBKey', key);
+  fb('cfgImgbbOk',null,true,'✓ Chave salva! Fotos serão enviadas para a nuvem.');
+  updateCfgStatus();
+});
+
+/* ══════════════════════════════════════════════
+   19. LOADING PROGRESS + INIT
+══════════════════════════════════════════════ */
+function setProgress(pct, txt) {
+  $('ldProg').style.width = pct+'%';
+  if (txt) $('ldTxt').textContent = txt;
+}
+function hideLoader() {
+  setTimeout(()=>{ $('loadScreen').classList.add('out'); setTimeout(()=>$('loadScreen').style.display='none',700); },300);
+}
+
+(async function init() {
+  setProgress(20,'Carregando dados...');
+
+  // 1. Render defaults immediately so nothing is blank
+  render(getData());
+
+  setProgress(50,'Verificando nuvem...');
+
+  // 2. Fetch remote
+  try {
+    const remote = await fetchRemote();
+    if (remote) {
+      const merged = deepMerge(DEF, remote);
+      saveLocal(merged);
+      render(merged);
+    }
+  } catch(e) { console.warn('Remote fetch failed', e); }
+
+  setProgress(100,'Pronto!');
+  hideLoader();
+
+  // Live toggles (preview before save)
+  $('togVideo').addEventListener('change',()=>{ $('videoSec').classList.toggle('hidden',!$('togVideo').checked); [$('deskVidLink'),$('mobVidLink')].forEach(e=>{if(e)e.style.display=$('togVideo').checked?'':'none';}); });
+  $('togMini').addEventListener('change',()=>{ $('miniSec').classList.toggle('hidden',!$('togMini').checked); });
+})();
+</script>
+</body>
+</html>
